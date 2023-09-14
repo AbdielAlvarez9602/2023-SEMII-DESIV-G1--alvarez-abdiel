@@ -1,0 +1,35 @@
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parte 2</title>
+</head>
+<body>
+    <section>
+        <h1>Formulario de Inicio de Sesión</h1>
+        <form id="loginForm">
+            <div>
+                <label for="correo">Correo Electrónico:</label>
+                <input type="email" id="correo" name="correo" required>
+            </div>
+            <div>
+                <label for="contrasena">Contraseña:</label>
+                <input type="password" id="contrasena" name="contrasena" required>
+            </div>
+            <div>
+                <input type="submit" value="Iniciar Sesión">
+            </div>
+        </form>
+    </section>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const correo = document.getElementById('correo').value;
+            const contrasena = document.getElementById('contrasena').value;
+            console.log('Correo Electrónico:', correo);
+            console.log('Contraseña:', contrasena);
+        });
+    </script>
+</body>
+</html>
