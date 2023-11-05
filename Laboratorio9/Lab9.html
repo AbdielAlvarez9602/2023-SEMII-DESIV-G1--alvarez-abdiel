@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            margin: 20px;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+        }
+        .block {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgb(250, 251, 252);
+            margin: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .input-section {
+            border: 3px solid rgb(254, 255, 255);
+            max-width: 300px;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="input-section">
+        <div style="color: white;">Cantidad de Filas</div>
+        <input type="number" id="numRows" min="1" max="5">
+        <button onclick="drawPyramid()">Dibujar</button>
+    </div>
+    
+    <div id="pyramid"></div>
+
+    <script>
+        function drawPyramid() {
+            var numRows = document.getElementById('numRows').value;
+            var pyramid = document.getElementById('pyramid');
+            pyramid.innerHTML = ''; 
+            var count = 1;
+            for (var i = 1; i <= numRows; i++) {
+                var row = document.createElement('div');
+                row.className = 'row';
+                for (var j = 0; j < i; j++) {
+                    var block = document.createElement('div');
+                    block.className = 'block';
+                    block.textContent = count++; 
+                    row.appendChild(block);
+                }
+                pyramid.appendChild(row);
+            }
+        }
+    </script>
+</body>
+</html>

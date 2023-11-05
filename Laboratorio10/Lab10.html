@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .input-container {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        #numBoxes {
+            color: black;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        .box {
+            width: 50px;
+            height: 50px;
+            border: 1px solid white;
+            margin: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: white;
+        }
+
+        .close {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: none;
+        }
+
+        .box:hover .close {
+            display: block;
+        }
+
+        button {
+            color: black;
+            background-color: white;
+            padding: 5px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="input-container">
+        <p>Introduce la cantidad</p>
+        <input type="number" id="numBoxes" min="1" max="20">
+    </div>
+    <button onclick="drawBoxes()">Dibujar</button>
+    <div id="container"></div>
+
+    <script>
+        function fibonacci(n) {
+            return n < 2 ? n : fibonacci(n - 1) + fibonacci(n - 2);
+        }
+
+        function removeBox(box) {
+            box.parentNode.removeChild(box);
+        }
+
+        function drawBoxes() {
+            var numBoxes = document.getElementById('numBoxes').value;
+            var container = document.getElementById('container');
+            container.innerHTML = '';
+
+            var row;
+
+            for (var i = 1; i <= numBoxes; i++) {
+                if (i % 5 === 1) {
+                    row = document.createElement('div');
+                    row.className = 'row';
+                    container.appendChild(row);
+                }
+
+                var box = document.createElement('div');
+                box.className = 'box';
+                box.textContent = fibonacci(i);
+
+                var close = document.createElement('span');
+                close.className = 'close';
+                close.textContent = 'X';
+                close.onclick = function() {
+                    removeBox(this.parentNode);
+                };
+
+                box.appendChild(close);
+                row.appendChild(box);
+            }
+        }
+    </script>
+</body>
+</html>
