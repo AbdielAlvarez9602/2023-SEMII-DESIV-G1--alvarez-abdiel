@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            margin: 20px;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+        }
+        .block {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgb(250, 251, 252);
+            margin: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .input-section {
+            border: 3px solid rgb(254, 255, 255);
+            max-width: 300px;
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        #selectedBlocks {
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="input-section">
+        <div style="color: white;">Cantidad de Filas</div>
+        <input type="number" id="numRows" min="1" max="50">
+        <button onclick="drawPyramid()">Dibujar</button>
+        <button onclick="sumSequential()">Suma secuencial</button>
+    </div>
+    
+    <div id="pyramid"></div>
+    <div id="totalSum"></div>
+    <div id="selectedBlocks"></div>
+
+    <script>
+        var sum = 0;
+        var selectedBlocks = [];
+
+        function drawPyramid() {
+            var numRows = parseInt(document.getElementById('numRows').value);
+            var pyramid = document.getElementById('pyramid');
+            var totalSum = document.getElementById('totalSum');
+            pyramid.innerHTML = ''; 
+            totalSum.innerHTML = '';
+            var count = 1;
+            var numbersArray = [];
+
+            // Generate an array with all unique numbers for blocks
+            for (var k = 1; k <= (numRows * (numRows + 1)) / 2; k++) {
+                numbersArray.push(k);
+            }
+
+            shuffleArray(numbersArray); // Shuffle the array to randomize the numbers
+
+            for (var i = 1; i <= numRows; i++) {
+                var row = document.createElement('div');
+                row.className = 'row';
+                for (var j = 0; j < i; j++) {
+                    var block = document.createElement('div');
+                    block.className = 'block';
+                    block.textContent = numbersArray[count - 1];
+                    block.setAttribute('data-value', numbersArray[count - 1]);
+                    block.setAttribute('data-row', i);
+                    count++;
+                    row.appendChild(block);
+                }
+                pyramid.appendChild(row);
+            }
+
+            sum = 0;
+            selectedBlocks = [];
+            document.getElementById('selectedBlocks').innerHTML = '';
+        }
+
+        function sumSequential() {
+            var numRows = parseInt(document.getElementById('numRows').value);
+            var blocks = document.querySelectorAll('.block');
+            
+            selectedBlocks = [];
+            sum = 0;
+
+            var currentIndex = 0;
+            var currentRow = 1;
+
+            while (currentRow < numRows) {
+                selectedBlocks.push(blocks[currentIndex].textContent);
+                sum += parseInt(blocks[currentIndex].textContent);
+
+                var nextRow = currentRow + 1;
+                var leftAdjacentIndex = currentIndex + currentRow;
+                var rightAdjacentIndex = currentIndex + currentRow + 1;
+                
+                if (blocks[leftAdjacentIndex].textContent > blocks[rightAdjacentIndex].textContent) {
+                    currentIndex = leftAdjacentIndex;
+                } else {
+                    currentIndex = rightAdjacentIndex;
+                }
+
+                currentRow++;
+            }
+
+            selectedBlocks.push(blocks[currentIndex].textContent);
+            sum += parseInt(blocks[currentIndex].textContent);
+
+            updateTotalSum();
+            displaySelectedBlocks();
+        }
+
+        function updateTotalSum() {
+            var totalSum = document.getElementById('totalSum');
+            totalSum.innerHTML = 'La suma total es: ' + sum;
+        }
+
+        function displaySelectedBlocks() {
+            var selectedBlocksDiv = document.getElementById('selectedBlocks');
+            selectedBlocksDiv.innerHTML = 'Cuadros seleccionados para la suma: ' + selectedBlocks.join(', ');
+        }
+
+        function shuffleArray(array) {
+            for (var i = array.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+    </script>
+</body>
+</html>
