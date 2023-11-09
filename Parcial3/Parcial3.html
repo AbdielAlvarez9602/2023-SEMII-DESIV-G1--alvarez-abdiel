@@ -1,11 +1,11 @@
-<!DOCTYPE html>
 <html>
 <head>
     <style>
         body {
-            background-color: black;
-            color: white;
+            background-color: #f0f0f0; /* Color de fondo más suave */
+            color: #333; /* Texto más oscuro para una mejor legibilidad */
             margin: 20px;
+            font-family: 'Arial', sans-serif; /* Tipografía más legible */
         }
         .row {
             display: flex;
@@ -14,24 +14,35 @@
         .block {
             width: 50px;
             height: 50px;
-            border: 3px solid rgb(250, 251, 252);
+            border: 3px solid #ccc; /* Borde más suave */
             margin: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
+            background-color: #fff; /* Fondo más claro para contraste */
+            font-size: 1.2em;
         }
         .input-section {
-            border: 3px solid rgb(254, 255, 255);
+            border: 3px solid #ccc;
             max-width: 300px;
             padding: 10px;
             text-align: center;
             margin-bottom: 10px;
             font-weight: bold;
             font-size: 1.2em;
+            background-color: #eee; /* Fondo más suave para la sección de entrada */
         }
         #selectedBlocks {
             margin-top: 10px;
             text-align: center;
+        }
+        button {
+            padding: 8px 15px;
+            margin: 5px;
+            border: none;
+            background-color: #4CAF50; /* Color más vivo para los botones */
+            color: white;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -41,6 +52,8 @@
         <input type="number" id="numRows" min="1" max="50">
         <button onclick="drawPyramid()">Dibujar</button>
         <button onclick="sumSequential()">Suma secuencial</button>
+        <button onclick="resetPyramid()">Reiniciar</button>
+        <button onclick="changeColorSelected()">Botón Seleccionados</button>
     </div>
     
     <div id="pyramid"></div>
@@ -55,17 +68,16 @@
             var numRows = parseInt(document.getElementById('numRows').value);
             var pyramid = document.getElementById('pyramid');
             var totalSum = document.getElementById('totalSum');
-            pyramid.innerHTML = ''; 
+            pyramid.innerHTML = '';
             totalSum.innerHTML = '';
             var count = 1;
             var numbersArray = [];
 
-            // Generate an array with all unique numbers for blocks
             for (var k = 1; k <= (numRows * (numRows + 1)) / 2; k++) {
-                numbersArray.push(k);
+                numbersArray.push(Math.floor(Math.random() * 99) + 1);
             }
 
-            shuffleArray(numbersArray); // Shuffle the array to randomize the numbers
+            shuffleArray(numbersArray);
 
             for (var i = 1; i <= numRows; i++) {
                 var row = document.createElement('div');
@@ -90,37 +102,75 @@
         function sumSequential() {
             var numRows = parseInt(document.getElementById('numRows').value);
             var blocks = document.querySelectorAll('.block');
-            
+
             selectedBlocks = [];
             sum = 0;
 
             var currentIndex = 0;
             var currentRow = 1;
 
-            while (currentRow < numRows) {
+            while (currentRow <= numRows) {
                 selectedBlocks.push(blocks[currentIndex].textContent);
                 sum += parseInt(blocks[currentIndex].textContent);
 
                 var nextRow = currentRow + 1;
                 var leftAdjacentIndex = currentIndex + currentRow;
                 var rightAdjacentIndex = currentIndex + currentRow + 1;
-                
-                if (blocks[leftAdjacentIndex].textContent > blocks[rightAdjacentIndex].textContent) {
-                    currentIndex = leftAdjacentIndex;
-                } else {
-                    currentIndex = rightAdjacentIndex;
+
+                if (blocks[leftAdjacentIndex] && blocks[rightAdjacentIndex]) {
+                    if (blocks[leftAdjacentIndex].textContent > blocks[rightAdjacentIndex].textContent) {
+                        currentIndex = leftAdjacentIndex;
+                    } else {
+                        currentIndex = rightAdjacentIndex;
+                    }
                 }
 
                 currentRow++;
             }
 
-            selectedBlocks.push(blocks[currentIndex].textContent);
-            sum += parseInt(blocks[currentIndex].textContent);
-
             updateTotalSum();
             displaySelectedBlocks();
         }
 
+        function resetPyramid() {
+            var blocks = document.querySelectorAll('.block');
+            blocks.forEach(block => {
+                block.style.borderColor = 'rgb(250, 251, 252)';
+            });
+
+            sum = 0;
+            selectedBlocks = [];
+            document.getElementById('selectedBlocks').innerHTML = '';
+            document.getElementById('totalSum').innerHTML = '';
+            document.getElementById('pyramid').innerHTML = '';
+            document.getElementById('numRows').value = '';
+        }
+
+    function changeColorSelected() {
+    const numRows = parseInt(document.getElementById('numRows').value);
+    const blocks = document.querySelectorAll('.block');
+
+    const blocksToColor = {};
+
+    for (let i = 1; i <= numRows; i++) {
+        blocksToColor[i] = null;
+    }
+
+    for (let i = 0; i < blocks.length; i++) {
+        const block = blocks[i];
+        const blockValue = block.textContent;
+        const blockRow = parseInt(block.getAttribute('data-row'));
+
+        if (selectedBlocks.includes(blockValue) && blocksToColor[blockRow] === null) {
+            blocksToColor[blockRow] = block;
+        }
+    }
+
+    blocks.forEach(block => {
+        let shouldColor = Object.values(blocksToColor).includes(block);
+        block.style.borderColor = shouldColor ? 'red' : 'rgb(250, 251, 252)';
+    });
+}
         function updateTotalSum() {
             var totalSum = document.getElementById('totalSum');
             totalSum.innerHTML = 'La suma total es: ' + sum;
