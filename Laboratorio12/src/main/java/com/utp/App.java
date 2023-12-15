@@ -22,7 +22,10 @@ public class App {
         });
 
         post("/notas/", (req, res) -> {
-            int value = Integer.parseInt(req.body());
+            int valu/**
+             * @return
+             */
+            e = Integer.parseInt(req.body());
             notas.add(value);
             return getResponse();
         });
